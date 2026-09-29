@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none">
+  <title>Avee mark</title>
+  <rect width="512" height="512" rx="128" fill="#050505"/>
+  <circle cx="256" cy="256" r="166" fill="#fff"/>
+  <path d="M166 350 232 165c5-15 17-23 32-23s27 8 32 23l66 185h-47l-18-55h-83l-18 55h-47l17-50Zm63-94h53l-26-78-27 78Z" fill="#050505"/>
+</svg>

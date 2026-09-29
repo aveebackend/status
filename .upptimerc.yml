@@ -1,31 +1,107 @@
-# Change these first
-owner: upptime # Your GitHub organization or username, where this repository lives
-repo: upptime # The name of this repository
+owner: aveebackend
+repo: status
+user-agent: aveetechapp-status
 
 sites:
-  - name: Google
-    url: https://www.google.com
-  - name: Wikipedia
-    url: https://en.wikipedia.org
-  - name: Hacker News
-    url: https://news.ycombinator.com
-  - name: Secret Site
-    url: $SECRET_SITE
+  - name: Client API
+    slug: client-api
+    url: https://api.preview.avee.tech/api/v1/status
+    expectedStatusCodes:
+      - 200
+    maxResponseTime: 5000
+    __dangerous__body_degraded_if_text_missing: '"status":"ok"'
+
+  - name: Screener API
+    slug: screener-api
+    url: https://api.preview.avee.tech/api/screener/v1/config
+    expectedStatusCodes:
+      - 200
+    maxResponseTime: 5000
+
+  - name: MCP server
+    slug: mcp
+    url: https://mcp.preview.avee.tech/mcp
+    method: POST
+    headers:
+      - "Content-Type: application/json"
+      - "Accept: application/json, text/event-stream"
+    body: '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2025-06-18","capabilities":{},"clientInfo":{"name":"avee-status","version":"1"}}}'
+    expectedStatusCodes:
+      - 200
+    maxResponseTime: 5000
+    __dangerous__body_down_if_text_missing: '"protocolVersion"'
+
+  - name: Astra oracle
+    slug: astra
+    url: https://astra.preview.avee.tech/ready
+    expectedStatusCodes:
+      - 200
+    maxResponseTime: 5000
+
+  - name: Astra feed list
+    slug: astra-feeds
+    url: https://astra.preview.avee.tech/v2/price_feeds
+    expectedStatusCodes:
+      - 200
+    maxResponseTime: 5000
+    __dangerous__body_down_if_text_missing: '"attributes"'
+
+  - name: Astra BTC/USD price
+    slug: astra-btc
+    url: https://astra.preview.avee.tech/v1/status?feed=e62df6c8b4a85fe1a67db44dc12de5db330f7ac66b72dc658afedf0f4a415b43
+    expectedStatusCodes:
+      - 200
+    maxResponseTime: 5000
+
+  - name: Astra ETH/USD price
+    slug: astra-eth
+    url: https://astra.preview.avee.tech/v1/status?feed=ff61491a931112ddf1bd8147cd1b641375f79f5825126d665480874634fd0ace
+    expectedStatusCodes:
+      - 200
+    maxResponseTime: 5000
+
+  - name: Astra feed freshness
+    slug: astra-freshness
+    url: https://astra.preview.avee.tech/v1/status
+    expectedStatusCodes:
+      - 200
+    maxResponseTime: 5000
+    __dangerous__body_degraded: '"stale":true'
+
+  - name: Docs
+    slug: docs
+    url: https://docs.preview.avee.tech/
+    expectedStatusCodes:
+      - 200
+    maxResponseTime: 10000
+
+workflowSchedule:
+  uptime: "*/5 * * * *"
+
+commitMessages:
+  statusChange: "$EMOJI $SITE_NAME is $STATUS"
+  commitAuthorName: "avee status"
 
 status-website:
-  # Add your custom domain name, or remove the `cname` line if you don't have a domain
-  # Uncomment the `baseUrl` line if you don't have a custom domain and add your repo name there
-  cname: demo.upptime.js.org
-  # baseUrl: /your-repo-name
-  logoUrl: https://raw.githubusercontent.com/upptime/upptime.js.org/master/static/img/icon.svg
-  name: Upptime
-  introTitle: "**Upptime** is the open-source uptime monitor and status page, powered entirely by GitHub."
-  introMessage: This is a sample status page which uses **real-time** data from our [GitHub repository](https://github.com/upptime/upptime). No server required — just GitHub Actions, Issues, and Pages. [**Get your own for free**](https://github.com/upptime/upptime)
+  # cname: status.avee.tech
+  baseUrl: /status
+  name: avee status
+  logoUrl: https://raw.githubusercontent.com/aveebackend/status/master/assets/mark.svg
+  favicon: https://raw.githubusercontent.com/aveebackend/status/master/assets/mark.svg
+  faviconSvg: https://raw.githubusercontent.com/aveebackend/status/master/assets/mark.svg
+  theme: dark
+  introTitle: "**avee** status"
+  introMessage: >-
+    Live checks of the avee client API, the Astra price oracle, the MCP server and the docs, run
+    every five minutes from outside our network. Astra's BTC and ETH checks fail when
+    those feeds stop trading or go stale; its freshness check turns degraded when any feed goes stale.
+    Objectives and how we report incidents: [Service levels](https://docs.preview.avee.tech/service-levels).
   navbar:
     - title: Status
       href: /
-    - title: GitHub
-      href: https://github.com/$OWNER/$REPO
-
-# Upptime also supports notifications, assigning issues, and more
-# See https://upptime.js.org/docs/configuration
+    - title: Service levels
+      href: https://docs.preview.avee.tech/service-levels
+    - title: Docs
+      href: https://docs.preview.avee.tech/
+    - title: Changelog
+      href: https://docs.preview.avee.tech/changelog
